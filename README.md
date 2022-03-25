@@ -154,7 +154,7 @@ Refer below sample
 
   }
 }
-```
+```git 
 ### Error Response structure
 ```yaml
 {
