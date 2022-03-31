@@ -31,7 +31,7 @@ const createBook = async function (req, res) {
     
         
 
-        const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data
+        const { title, excerpt,  ISBN, category, subcategory, releasedAt } = data
 
         const req0 = isValid(title)
         if (!req0) return res.status(400).send("title is required")
@@ -40,10 +40,10 @@ const createBook = async function (req, res) {
         const req1 = isValid(excerpt)
         if (!req1) return res.status(400).send("excerpt is required")
 
-        const req2 = isValid(userId.trim())
+        const req2 = isValid(userID.trim())
         if (!req2) return res.status(400).send("userId is required")
 
-        if (!isValidObjectId(userId)) { return res.status(400).send({ status: false, msg: 'Invalid Format of bookId' }) }
+        if (!isValidObjectId(userID)) { return res.status(400).send({ status: false, msg: 'Invalid Format of userId' }) }
 
         if (userID != userlogin) { return res.status(400).send({ status: false, msg: "userId is not belongs to you" }) }
 

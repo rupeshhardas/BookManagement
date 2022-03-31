@@ -10,16 +10,17 @@ const isValid = function (value) {
     return true
 }
 
+const isValidObjectId = function (ObjectId) {
+    return mongoose.Types.ObjectId.isValid(ObjectId)
+}
 
 const createReview = async function (req, res) {
     try {
         const data = req.body
         let data1 = req.params.bookId
-
-        if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: 'data is missing' }) }
-
-
-
+                                                                                                                            
+        if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: 'data is missing' })}
+                                                                                             
         let findBookId = await bookModel.findById(data1)
         if (!findBookId) return res.status(400).send("not a valid id")
 
@@ -28,7 +29,7 @@ const createReview = async function (req, res) {
         let req0 = isValid(bookId)
         if (!req0) return res.status(400).send("Bookid is required")
 
-        if (!isValidObjectId(data1)) { return res.status(400).send({ status: false, msg: 'Invalid Format of bookId' }) }
+        if (!isValidObjectId(data.bookId)) { return res.status(400).send({ status: false, msg: 'Invalid Format of bookId' }) }
 
         let findBookid = await bookModel.findById(data.bookId)
         if (!findBookid) return res.status(400).send("Bookid is not valid")
@@ -142,10 +143,7 @@ const deleteReview = async function (req, res) {
 
     if (findReviewid.isDeleted == false) {
 
-
         let findId = findbookid._id
-
-
         const deleteReviewid = await reviewModel.findOneAndUpdate({ _id: reviewid, bookId: findId }, { isDeleted: true, deletedAt: new Date() }, { new: true })
         if (!deleteReviewid) return res.status(400).send({ status: false, msg: "in params book id not exist in review" })
 
