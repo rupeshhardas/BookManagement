@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel')
 const jwt=require ('jsonwebtoken')
+const mongoose=require('mongoose')
 
 const isValid = function (value) {
     if (typeof (value) == "undefined" || typeof (value) == "null") { return false }
@@ -11,7 +12,8 @@ const isValid = function (value) {
 const createUser = async function (req, res) {
     try {
          const data = req.body
-         if(Object.keys(data)==0){return res.status(400).send('data  is missing')}
+
+         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: 'data is missing' }) }
 
         let { name,password} = data
      
@@ -105,9 +107,6 @@ const createUser = async function (req, res) {
         { return  res.status(400).send("pincode is invalid")}
 
 
-    
-
-
         const createData = await UserModel.create(data)
         res.status(201).send({ status: true, data: createData })
     }
@@ -121,7 +120,8 @@ const createUser = async function (req, res) {
 
 const loginUser=async function(req,res){
     const data=req.body
-    if(Object.keys(data)==0){return res.status(400).send('data  is missing')}
+
+    if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: 'Please provide email and password' }) }
    
     const {email, password } = data
 
