@@ -85,6 +85,8 @@ const getBooks = async function (req, res) {
 
         const data = req.query
 
+        if(Object.keys(data).length>0  && Object.values(data)==0){ return res.status(400).send({status:false,msg:"please provide value to key"})}
+
         let findBook = await bookModel.find({ $and: [data, { isDeleted: false }] }).sort({ title: 1 }).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
         if (findBook.length == 0) return res.status(404).send({ status: false, mgs: "no Books available" })
         res.status(200).send({ status: true, message: "book details", data: findBook })
@@ -109,7 +111,6 @@ const getDetailsBooks = async function (req, res) {
         let findId = findBook._id
         let findReviewscount = await reviewModel.find({ bookId: findId, isDeleted: false }).count()
         let findReviews = await reviewModel.find({ bookId: findId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
-        if (!findReviews) return res.status(400).send("no reviews yet")
 
         let Details = {
             _id: Stored._id, title: Stored.title, excerpt: Stored.excerpt, userId: Stored.userId, ISBN: Stored.ISBN,

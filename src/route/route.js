@@ -21,7 +21,7 @@ router.get('/books',BookController.getBooks)
 
 router.get('/books/:bookId',middleware.authenticate,middleware.autherization, BookController.getDetailsBooks)
 
-router.put('/books/:bookId',middleware.authenticate,middleware.authenticate, BookController.updateBook)
+router.put('/books/:bookId',middleware.authenticate,middleware.autherization, BookController.updateBook)
 
 router.delete('/books/:bookId',middleware.authenticate,middleware.autherization, BookController.deleteBook)
 
