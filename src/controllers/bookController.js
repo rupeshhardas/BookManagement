@@ -29,8 +29,6 @@ const createBook = async function (req, res) {
 
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: 'data is missing' }) }
     
-        
-
         const { title, excerpt,  ISBN, category, subcategory, releasedAt } = data
 
         const req0 = isValid(title)

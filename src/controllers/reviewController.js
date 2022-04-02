@@ -20,6 +20,8 @@ const createReview = async function (req, res) {
         let data1 = req.params.bookId
                                                                                                                             
         if (Object.keys(data) == 0) { return res.status(400).send({ status: false, msg: 'data is missing' })}
+
+        if (!isValidObjectId(data1)) { return res.status(400).send({ status: false, msg: 'Invalid Format of reviewId' }) }
                                                                                              
         let findBookId = await bookModel.findById(data1)
         if (!findBookId) return res.status(400).send("not a valid id")
@@ -53,7 +55,7 @@ const createReview = async function (req, res) {
             let findId = findBookid._id
             let findReviewscount = await reviewModel.find({ bookId: findId, isDeleted: false }).count()
             let findReviews = await reviewModel.find({ bookId: findId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
-            if (!findReviews) return res.status(400).send("no reviews yet")
+            
 
             let Stored = findBookid
 
@@ -107,7 +109,7 @@ const updateReview = async function (req, res) {
             let findId = findBookid._id
             let findReviewscount = await reviewModel.find({ bookId: findId, isDeleted: false }).count()
             let findReviews = await reviewModel.find({ bookId: findId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
-            if (!findReviews) return res.status(400).send("no reviews yet")
+        
 
             let Details = {
                 _id: Stored._id, title: Stored.title, excerpt: Stored.excerpt, userId: Stored.userId, ISBN: Stored.ISBN,
@@ -127,6 +129,7 @@ const updateReview = async function (req, res) {
 }
 
 const deleteReview = async function (req, res) {
+    try{
 
     const bookid = req.params.bookId
     const reviewid = req.params.reviewId
@@ -138,7 +141,7 @@ const deleteReview = async function (req, res) {
     const findbookid = await bookModel.findOne({ _id: bookid, isDeleted: false })
     if (!findbookid) return res.status(404).send({ status: false, msg: "book id doesn't exist" })
 
-    const findReviewid = await reviewModel.findById(data1)
+    const findReviewid = await reviewModel.findById(reviewid)
     if (!findReviewid) return res.status(400).send({ status: false, msg: "review id is not exist" })
 
     if (findReviewid.isDeleted == false) {
@@ -158,11 +161,15 @@ const deleteReview = async function (req, res) {
             category: Stored.category, subcategory: Stored.subcategory, reviews: findReviewscount, isDeleted: Stored.isDeleted,
             releasedAt: Stored.releasedAt, createdAt: Stored.createdAt, updatedAt: Stored.updatedAt, reviewsData: findReviews
         }
-        res.status(201).send({ status: true, data: Details })
+        res.status(201).send({ status: true,msg:"Review deleted successfully", data: Details })
     }
     else {
         return res.status(400).send({ status: false, msg: "review is already deleted" })
     }
+}
+catch(error){
+    return res.status(500).send({status:false,mgs:error.message})
+}
 
 }
 
